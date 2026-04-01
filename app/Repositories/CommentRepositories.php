@@ -177,8 +177,8 @@ class CommentRepositories implements CommentContract
             })
             ->groupBy('user_id')
             ->select([
-                'SUM(CASE WHEN presence = "t" THEN 1 ELSE 0 END) AS present_count',
-                'SUM(CASE WHEN presence != "t" THEN 1 ELSE 0 END) AS absent_count'
+                "SUM(CASE WHEN presence = 't' THEN 1 ELSE 0 END) AS present_count",
+                "SUM(CASE WHEN presence != 't' THEN 1 ELSE 0 END) AS absent_count"
             ])
             ->first();
     }
