@@ -167,7 +167,7 @@ class CommentRepositories implements CommentContract
         return Comment::where('user_id', $id)->count('id', 'comments')->first()->comments;
     }
 
-    public function countPresenceByUserID(int $id): Model
+    public function countPresenceByUserID(int $id): ?Model
     {
         return Comment::where('user_id', $id)
             ->whereNull('parent_id')
