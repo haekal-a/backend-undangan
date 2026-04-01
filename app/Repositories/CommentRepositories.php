@@ -58,7 +58,7 @@ class CommentRepositories implements CommentContract
                     ->where('comments.user_id', $user_id)
                     ->select($selectedFields)
                     ->select(['comments.id', 'false as is_parent', 'comments.parent_id', 'count(likes.id) as like_count'])
-                    ->groupBy(['comments.id', ...$selectedFields])
+                    ->groupBy(['comments.id', 'comments.parent_id', ...$selectedFields])
                     ->orderBy('comments.id')
                     ->get()
                     ->map(function ($child) use (&$grouped): void {
@@ -87,7 +87,7 @@ class CommentRepositories implements CommentContract
             ->where('comments.user_id', $user_id)
             ->select($selectedFields)
             ->select(['comments.id', 'true as is_parent', 'comments.parent_id', 'count(likes.id) as like_count'])
-            ->groupBy(['comments.id', ...$selectedFields])
+            ->groupBy(['comments.id', 'comments.parent_id', ...$selectedFields])
             ->orderBy('comments.id', 'DESC')
             ->limit(abs($limit))
             ->offset($offset)
@@ -177,8 +177,8 @@ class CommentRepositories implements CommentContract
             })
             ->groupBy('user_id')
             ->select([
-                'SUM(CASE WHEN presence = TRUE THEN 1 ELSE 0 END) AS present_count',
-                'SUM(CASE WHEN presence = FALSE THEN 1 ELSE 0 END) AS absent_count'
+                'SUM(CASE WHEN presence = "t" THEN 1 ELSE 0 END) AS present_count',
+                'SUM(CASE WHEN presence != "t" THEN 1 ELSE 0 END) AS absent_count'
             ])
             ->first();
     }
